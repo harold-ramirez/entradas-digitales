@@ -1,25 +1,25 @@
 {
   "expo": {
-    "name": "entradas-digitales",
-    "slug": "entradas-digitales",
+    "name": "Digital Tickets",
+    "slug": "digital-tickets",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/appIcon.png",
     "userInterfaceStyle": "light",
-    "scheme": "entradas-digitales",
+    "scheme": "digital-tickets",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/appIcon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#3ca4ac"
     },
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/appIcon.png",
+        "backgroundColor": "#3ca4ac"
       }
     },
     "web": {
