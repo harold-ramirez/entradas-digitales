@@ -23,3 +23,7 @@ export const ScanQRIcon = (props) => (
     {...props}
   />
 );
+
+export const RightIcon = (props) => (
+  <FontAwesome5 name="angle-right" size={24} color="black" {...props} />
+);
