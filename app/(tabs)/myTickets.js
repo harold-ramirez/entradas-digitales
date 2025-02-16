@@ -2,11 +2,24 @@ import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Screen } from "../../components/Screen";
 import { TicketCard } from "../../components/TicketCard";
-import { FlatList, ActivityIndicator, View, Text } from "react-native";
+import {
+  FlatList,
+  ActivityIndicator,
+  View,
+  Text,
+  RefreshControl,
+} from "react-native";
 
 export default function MyTickets() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await loadTickets();
+    setRefreshing(false);
+  };
 
   const loadTickets = async () => {
     try {
@@ -21,6 +34,7 @@ export default function MyTickets() {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     loadTickets();
   }, []);
@@ -36,18 +50,26 @@ export default function MyTickets() {
       <View className="flex-1">
         {loading ? (
           <ActivityIndicator color={"#fff"} size={"large"} />
-        ) : items.length === 0 ? (
-          <View className="flex-1 justify-center items-center">
-            <Text className="bg-black/50 text-white text-lg text-center italic rounded-lg p-3 w-3/4">
-              Aún no tienes ninguna{"\n"}entrada registrada... 😔
-            </Text>
-          </View>
         ) : (
           <FlatList
             data={items}
             keyExtractor={(item) => item.ticketId}
             renderItem={({ item }) => <TicketCard ticket={item} />}
-            contentContainerStyle={{ gap: 16 }}
+            contentContainerStyle={{ gap: 16, flexGrow: 1 }}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+                colors={["#000"]}
+              />
+            }
+            ListEmptyComponent={
+              <View className="flex-1 justify-center items-center">
+                <Text className="bg-black/50 text-white text-lg text-center italic rounded-lg p-3 w-3/4">
+                  Aún no tienes ninguna{"\n"}entrada registrada... 😔
+                </Text>
+              </View>
+            }
           />
         )}
       </View>
