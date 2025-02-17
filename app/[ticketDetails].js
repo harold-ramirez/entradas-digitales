@@ -21,15 +21,15 @@ export default function TicketDetails() {
 
       <View className="flex-1 items-center">
         <Text className="bg-red-900 text-white w-full p-2 text-center text-3xl font-bold rounded-md">
-          {ticketData?.name}
+          {ticketData?.eventData.name}
         </Text>
-        <View className="flex-1">
+        <View className="flex-1 items-center">
           <Image
             source={event_bg}
             style={{ width: 300, height: 300 }}
             className="my-5 rounded-xl"
           />
-          <View className="flex-1 flex-row gap-3 items-center">
+          <View className="w-full flex-1 flex-row gap-3 items-center">
             <View className="flex-1">
               <Text className="text-white text-right text-xl font-bold">
                 Fecha Evento:
@@ -37,10 +37,18 @@ export default function TicketDetails() {
               <Text className="text-white text-right text-xl font-bold">
                 Lugar:
               </Text>
+              <Text className="text-white text-right text-xl font-bold">
+                Estado:
+              </Text>
             </View>
             <View className="flex-1">
-              <Text className="text-white text-xl">{ticketData?.date}</Text>
-              <Text className="text-white text-xl">{ticketData?.location}</Text>
+              <Text className="text-white text-xl">
+                {ticketData?.eventData.date}
+              </Text>
+              <Text className="text-white text-xl">
+                {ticketData?.eventData.ubi}
+              </Text>
+              <Text className="text-white text-xl">{ticketData?.state}</Text>
             </View>
           </View>
         </View>

@@ -21,8 +21,10 @@ export function TicketCard({ ticket }) {
             className="rounded-md border border-white"
           />
           <View className="flex-1 justify-center">
-            <Text className="font-bold text-2xl text-white">{ticket.name}</Text>
-            <Text className="text-lg text-white">{ticket.date}</Text>
+            <Text className="font-bold text-2xl text-white">
+              {ticket.eventData.name}
+            </Text>
+            <Text className="text-lg text-white">{ticket.eventData.date}</Text>
           </View>
           <View className="justify-center p-4">
             <RightIcon color="white" size={32} />
