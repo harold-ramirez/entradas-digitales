@@ -7,6 +7,8 @@ import { useCameraPermissions } from "expo-camera";
 import CameraComponent from "../../components/Camera";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
+import { updateEventAndTicket } from "../../Operations";
+
 
 export default function ScanQRcode() {
   const [permission, requestPermission] = useCameraPermissions();
@@ -32,30 +34,44 @@ export default function ScanQRcode() {
   );
 
   const handleAccept = async () => {
-    if (!ticketInfo || !ticketInfo.ticketId) return;
+    if (!ticketInfo || !ticketInfo.ticketId || !ticketInfo.eventID) {
+      Alert.alert("Error", "Información del ticket incompleta");
+      return;
+    }
+  
     setIsLoading(true);
-
+  
     try {
+      const result = await updateEventAndTicket(ticketInfo.eventID, ticketInfo.ticketId);
+  
+      if (!result.success) {
+        Alert.alert("Error", result.error || "No se pudo actualizar el ticket");
+        setIsLoading(false);
+        return;
+      }
+  
       const storedTickets = await AsyncStorage.getItem("Stored-Tickets");
       let ticketsArray = storedTickets ? JSON.parse(storedTickets) : [];
       if (!Array.isArray(ticketsArray)) ticketsArray = [];
-
+  
       const ticketIndex = ticketsArray.findIndex((t) => t.ticketId === ticketInfo.ticketId);
       if (ticketIndex !== -1) {
-        ticketsArray[ticketIndex].state = "Utilizado";
+        ticketsArray[ticketIndex].state = "leido";
       } else {
-        ticketsArray.push({ ...ticketInfo, state: "Utilizado" });
+        ticketsArray.push({ ...ticketInfo, state: "leido" });
       }
-
+  
       await AsyncStorage.setItem("Stored-Tickets", JSON.stringify(ticketsArray));
+  
       Alert.alert("✅ Éxito", "El ticket ha sido utilizado correctamente.");
       setTicketInfo(null);
     } catch (error) {
-      console.error("❌ Error actualizando ticket:", error);
+      Alert.alert("Error", "Ocurrió un problema al procesar el ticket.");
     } finally {
       setIsLoading(false);
     }
   };
+  
 
   return (
     <Screen>

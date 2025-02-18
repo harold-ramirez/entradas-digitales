@@ -7,6 +7,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Overlay } from "./Overlay";
 import { validateTicketAndEvent } from "../Operations";
 
+
 export default function CameraComponent({ onClose }) {
   const [flashOn, setFlashOn] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
@@ -56,32 +57,36 @@ export default function CameraComponent({ onClose }) {
   const validateQR = async (data) => {
     if (!data) return;
   
-    const ticketIdMatch = data.match(/Ticket ID:\s*(\S+)/);
-    if (!ticketIdMatch) {
-      setQrContent("❌ QR no válido, no pertenece a la Organización.");
+   
+    const ticketMatch = data.match(/Ticket ID:\s*(\S+)/);
+    const eventMatch = data.match(/EventID:\s*([a-f0-9-]+)/i);
+  
+    
+    if (!ticketMatch || !eventMatch) {
+      setQrContent("❌ QR no válido, datos incompletos.");
       setModalVisible(true);
       setTimeout(() => setModalVisible(false), 2000);
       return;
     }
   
-    const ticketId = ticketIdMatch[1];
+    const ticketId = ticketMatch[1]; 
+    const eventId = eventMatch[1]; 
   
     
     const localTicket = localTickets.find(ticket => ticket.ticketId === ticketId);
-  
-    if (localTicket && localTicket.state === "Utilizado") {
+    if (localTicket && localTicket.state === "leido") {
       setQrContent("❌ El QR ya fue utilizado.");
       setModalVisible(true);
       setTimeout(() => setModalVisible(false), 2000);
       return;
     }
   
-   
-    const ticketData = await validateTicketAndEvent(ticketId);
+    
+    const ticketData = await validateTicketAndEvent(ticketId, eventId);
   
     if (ticketData) {
-      if (ticketData.state === "Utilizado") {
-        setQrContent("❌ El QR fue generado Utilizado.");
+      if (ticketData.state === "leido") {
+        setQrContent("❌ El QR fue generado y ya está utilizado.");
         setModalVisible(true);
         setTimeout(() => setModalVisible(false), 2000);
       } else {
@@ -101,6 +106,8 @@ export default function CameraComponent({ onClose }) {
     }
   };
   
+
+
   if (!permission) {
     return (
       <View style={styles.permissionContainer}>
@@ -123,7 +130,6 @@ export default function CameraComponent({ onClose }) {
   return (
     <SafeAreaView style={StyleSheet.absoluteFillObject}>
       {Platform.OS === "android" ? <StatusBar hidden /> : null}
-
       <CameraView
         style={StyleSheet.absoluteFillObject}
         facing="back"
@@ -138,9 +144,7 @@ export default function CameraComponent({ onClose }) {
           }
         }}
       />
-
       <Overlay />
-
       <Modal animationType="slide" transparent visible={modalVisible} onRequestClose={() => setModalVisible(false)}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
@@ -148,27 +152,15 @@ export default function CameraComponent({ onClose }) {
           </View>
         </View>
       </Modal>
-
-      <Pressable
-        style={styles.closeButton}
-        onPress={() => {
-          if (onClose) {
-            onClose();
-          } else {
-            navigation.goBack();
-          }
-        }}
-      >
+      <Pressable style={styles.closeButton} onPress={() => (onClose ? onClose() : navigation.goBack())}>
         <MaterialIcons name="close" size={28} color="white" />
       </Pressable>
-
-      <Pressable style={styles.flashButton} onPress={() => setFlashOn((prev) => !prev)}>
+      <Pressable style={styles.flashButton} onPress={() => setFlashOn(prev => !prev)}>
         <MaterialIcons name={flashOn ? "flash-on" : "flash-off"} size={28} color="white" />
       </Pressable>
     </SafeAreaView>
   );
 }
-
 const styles = StyleSheet.create({
   closeButton: {
     position: "absolute",
