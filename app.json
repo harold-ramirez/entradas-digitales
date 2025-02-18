@@ -20,7 +20,12 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/appIcon.png",
         "backgroundColor": "#3ca4ac"
-      }
+      },
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.haroldramirez.digitaltickets"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -36,6 +41,14 @@
         }
       ],
       "expo-barcode-scanner"
-    ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "db66bfc2-b490-4d49-b17d-871c21f60883"
+      }
+    }
   }
 }

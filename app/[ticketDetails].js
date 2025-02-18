@@ -2,6 +2,7 @@ import { View, Text, Image } from "react-native";
 import { Screen } from "../components/Screen";
 import { Stack, useLocalSearchParams } from "expo-router";
 import event_bg from "../assets/event-bg.webp";
+import qrCode from "../assets/qrExample.png";
 
 export default function TicketDetails() {
   const { ticket } = useLocalSearchParams();
@@ -27,18 +28,18 @@ export default function TicketDetails() {
           <Image
             source={event_bg}
             style={{ width: 300, height: 300 }}
-            className="my-5 rounded-xl"
+            className="my-3 rounded-xl border border-slate-300"
           />
-          <View className="w-full flex-1 flex-row gap-3 items-center">
+          <View className="w-full p-5 flex-row gap-3 items-center">
             <View className="flex-1">
               <Text className="text-white text-right text-xl font-bold">
-                Fecha Evento:
+                📆 Fecha Evento:
               </Text>
               <Text className="text-white text-right text-xl font-bold">
-                Lugar:
+                📍 Lugar:
               </Text>
               <Text className="text-white text-right text-xl font-bold">
-                Estado:
+                🎫 Estado:
               </Text>
             </View>
             <View className="flex-1">
@@ -50,6 +51,13 @@ export default function TicketDetails() {
               </Text>
               <Text className="text-white text-xl">{ticketData?.state}</Text>
             </View>
+          </View>
+          <View className="flex-1 items-center justify-center">
+            <Image
+              source={qrCode}
+              style={{ width: 150, height: 150 }}
+              className="rounded-xl"
+            />
           </View>
         </View>
         <View className="my-2">

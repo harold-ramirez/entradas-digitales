@@ -54,7 +54,9 @@ export default function MyTickets() {
           <FlatList
             data={items}
             keyExtractor={(item) => item.ticketId}
-            renderItem={({ item }) => <TicketCard ticket={item} />}
+            renderItem={({ item, index }) => (
+              <TicketCard ticket={item} index={index} />
+            )}
             contentContainerStyle={{ gap: 16, flexGrow: 1 }}
             refreshControl={
               <RefreshControl
@@ -72,6 +74,12 @@ export default function MyTickets() {
             }
           />
         )}
+      </View>
+      <View>
+        <Text className="text-white text-center text-md italic">
+          Si no encuentra su entrada después de escanear el código QR, intente
+          actualizar deslizando hacia abajo
+        </Text>
       </View>
     </Screen>
   );
